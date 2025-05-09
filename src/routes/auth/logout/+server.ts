@@ -10,9 +10,9 @@
  * The logout redirect URI must be whitelisted in the Cognito app client settings.
  * 
  * Environment Variables Used:
- * - AWS_COGNITO_CLIENT_ID: The Cognito App Client ID
- * - AWS_COGNITO_LOGOUT_URI: The URI Cognito should redirect to after logout
- * - AWS_COGNITO_DOMAIN: The Cognito hosted UI domain
+ * - COGNITO_CLIENT_ID: The Cognito App Client ID
+ * - COGNITO_LOGOUT_URI: The URI Cognito should redirect to after logout
+ * - COGNITO_DOMAIN: The Cognito hosted UI domain
  */
 
 // Import the RequestHandler type and redirect utility from SvelteKit
@@ -21,9 +21,9 @@ import { redirect } from '@sveltejs/kit';
 
 // Import Cognito configuration values from private environment variables
 import {
-	AWS_COGNITO_CLIENT_ID,
-	AWS_COGNITO_LOGOUT_URI,
-	AWS_COGNITO_DOMAIN
+	COGNITO_CLIENT_ID,
+	COGNITO_LOGOUT_URI,
+	COGNITO_DOMAIN
 } from '$env/static/private';
 
 // Handle GET requests to the /logout endpoint
@@ -34,13 +34,13 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	cookies.delete('refresh_token', { path: '/' });
 
 	// Build the Cognito logout URL
-	const logoutUrl = new URL(`${AWS_COGNITO_DOMAIN}/logout`);
+	const logoutUrl = new URL(`${COGNITO_DOMAIN}/logout`);
 	
 	// Add required query parameters to logout from Cognito:
 	// - client_id: identifies the app
 	// - logout_uri: where Cognito should redirect the user after logout
-	logoutUrl.searchParams.set('client_id', AWS_COGNITO_CLIENT_ID);
-	logoutUrl.searchParams.set('logout_uri', AWS_COGNITO_LOGOUT_URI); // Must be whitelisted in Cognito settings
+	logoutUrl.searchParams.set('client_id', COGNITO_CLIENT_ID);
+	logoutUrl.searchParams.set('logout_uri', COGNITO_LOGOUT_URI); // Must be whitelisted in Cognito settings
 
 	// Redirect the user to the Cognito logout endpoint
 	throw redirect(302, logoutUrl.toString());

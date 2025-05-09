@@ -86,9 +86,9 @@ import { generateCodeChallenge, generateCodeVerifier } from '$lib/auth/pkce';
 // Import environment variables securely from your SvelteKit project's private environment file
 // These are injected at build-time and never exposed to the client
 import {
-	AWS_COGNITO_CLIENT_ID, // Your AWS Cognito App Client ID
-	AWS_COGNITO_REDIRECT_URI, // The URI Cognito will redirect to after login
-	AWS_COGNITO_DOMAIN // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
+	COGNITO_CLIENT_ID, // Your AWS Cognito App Client ID
+	COGNITO_REDIRECT_URI, // The URI Cognito will redirect to after login
+	COGNITO_DOMAIN // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
 } from '$env/static/private';
 
 
@@ -133,9 +133,9 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	
 	const urlencoded = new URLSearchParams();
 	urlencoded.append('grant_type', 'authorization_code');
-	urlencoded.append('client_id', AWS_COGNITO_CLIENT_ID);
+	urlencoded.append('client_id', COGNITO_CLIENT_ID);
 	urlencoded.append('code', code);
-	urlencoded.append('redirect_uri', AWS_COGNITO_REDIRECT_URI);
+	urlencoded.append('redirect_uri', COGNITO_REDIRECT_URI);
 	urlencoded.append('code_verifier', verifier);
 
 	const requestOptions: RequestInit = {
@@ -144,7 +144,7 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 		body: urlencoded
 	};
 
-	const response = await fetch(`${AWS_COGNITO_DOMAIN}/oauth2/token`, requestOptions);
+	const response = await fetch(`${COGNITO_DOMAIN}/oauth2/token`, requestOptions);
 
 	if (!response.ok) {
 		throw redirect(302, '/auth/login');

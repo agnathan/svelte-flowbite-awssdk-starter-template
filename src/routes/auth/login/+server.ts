@@ -17,7 +17,7 @@
  * 
  * @requires $lib/auth/pkce            PKCE helper functions: generateCodeVerifier, generateCodeChallenge
  * @requires @sveltejs/kit             SvelteKit redirect utility and RequestHandler type
- * @requires $env/static/private       AWS_COGNITO_CLIENT_ID, AWS_COGNITO_REDIRECT_URI, AWS_COGNITO_DOMAIN
+ * @requires $env/static/private       COGNITO_CLIENT_ID, COGNITO_REDIRECT_URI, COGNITO_DOMAIN
  * 
  * @example
  * // In your SvelteKit routes:
@@ -33,9 +33,9 @@ import { generateCodeChallenge, generateCodeVerifier } from '$lib/auth/pkce';
 import { redirect, type RequestHandler } from '@sveltejs/kit';
 // Load Cognito configuration from environment variables
 import {
-	AWS_COGNITO_CLIENT_ID,    // Your AWS Cognito App Client ID
-	AWS_COGNITO_REDIRECT_URI, // The URI Cognito will redirect to after login
-	AWS_COGNITO_DOMAIN        // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
+	COGNITO_CLIENT_ID,    // Your AWS Cognito App Client ID
+	COGNITO_REDIRECT_URI, // The URI Cognito will redirect to after login
+	COGNITO_DOMAIN        // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
 } from '$env/static/private';
 
 // Handle GET requests to initiate the OAuth2 authorization code flow with PKCE
@@ -55,15 +55,15 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	});
 
 	// 4. Build the Cognito Hosted UI login URL with required query parameters
-	const loginUrl = new URL(`${AWS_COGNITO_DOMAIN}/login`);
+	const loginUrl = new URL(`${COGNITO_DOMAIN}/login`);
 	// Identify the client application
-	loginUrl.searchParams.set('client_id', AWS_COGNITO_CLIENT_ID);
+	loginUrl.searchParams.set('client_id', COGNITO_CLIENT_ID);
 	// Use authorization code flow
 	loginUrl.searchParams.set('response_type', 'code');
 	// Request scopes for user info
 	loginUrl.searchParams.set('scope', 'email openid phone');
 	// Where Cognito should redirect after successful login
-	loginUrl.searchParams.set('redirect_uri', AWS_COGNITO_REDIRECT_URI);
+	loginUrl.searchParams.set('redirect_uri', COGNITO_REDIRECT_URI);
 	// Attach the PKCE code challenge
 	loginUrl.searchParams.set('code_challenge', challenge);
 	// Specify the code challenge method
