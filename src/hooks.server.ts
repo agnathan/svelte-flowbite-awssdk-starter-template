@@ -5,6 +5,7 @@ import { redirect } from '@sveltejs/kit';
 export const handle: Handle = async ({ event, resolve }) => {
 	// Don't protect the /auth/login and /auth/callback routes
 	if (
+		// event.url.pathname.startsWith('/') ||
 		event.url.pathname.startsWith('/auth/login') ||
 		event.url.pathname.startsWith('/auth/callback')
 	) {

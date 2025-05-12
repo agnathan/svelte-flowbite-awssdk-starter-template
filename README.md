@@ -22,6 +22,7 @@
   - [Deployment](#deployment)
   - [Testing](#testing)
   - [Contributing](#contributing)
+  - [TODO](#todo)
   - [License](#license)
   - [Acknowledgments](#acknowledgments)
 
@@ -165,6 +166,10 @@ State clearly how users can contribute to your project:
 * Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 * Push to the Branch (`git push origin feature/AmazingFeature`)
 * Open a Pull Request
+
+## TODO
+- Websockets should use a Cognito Authorizer to connect
+- At the moment, every user receives all changes in the table. They should only receive changes for items that belong to the user
 
 ## License
 
