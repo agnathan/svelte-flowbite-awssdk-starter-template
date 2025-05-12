@@ -19,6 +19,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// If user is not logged in, redirect to login
 	if (!id_token || !access_token || !refresh_token) {
+		console.log('User is not logged in, redirecting to login');
+		console.log('id_token:', id_token);
+		console.log('access_token:', access_token);
+		console.log('refresh_token:', refresh_token);
 		throw redirect(302, '/auth/login');
 	}
 
