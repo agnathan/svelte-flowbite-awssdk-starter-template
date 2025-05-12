@@ -15,6 +15,10 @@ export const getAWSIdentityId = async ({ idToken }: { idToken: string }) => {
 	const cIdentity = new CognitoIdentityClient({ region: REGION });
 	console.log('Getting Cognito Identity ID');
 
+	console.log('COGNITO_IDENTITY_POOL_ID: ', COGNITO_IDENTITY_POOL_ID);
+	console.log('COGNITO_USER_POOL_ID: ', COGNITO_USER_POOL_ID);
+	console.log('REGION: ', REGION);
+	console.log('idToken: ', idToken);
 	const command = new GetIdCommand({
 		IdentityPoolId: COGNITO_IDENTITY_POOL_ID,
 		Logins: {
