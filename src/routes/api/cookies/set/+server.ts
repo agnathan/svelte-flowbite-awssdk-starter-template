@@ -5,7 +5,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	
     cookies.set('yomama', '1234567890', {
 		httpOnly: true,
-		secure: false,
+		secure: true,
 		sameSite: 'lax',
 		path: '/api/cookies/get',
 		maxAge: 300
