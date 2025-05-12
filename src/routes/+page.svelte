@@ -36,8 +36,11 @@
       <Button href="https://flowbite-svelte.com" color="blue" size="lg">
         💅 Flowbite Svelte Docs
       </Button>
-      <Button href="/aws" color="light" size="lg">
-        ☁️ AWS Examples Integrations
+      <Button href="/connectedtable" color="light" size="lg">
+        ☁️ AWS Connected Table
+      </Button>
+      <Button href="/uploads" color="light" size="lg">
+        ☁️ AWS File Uploads
       </Button>
     </div>
 
