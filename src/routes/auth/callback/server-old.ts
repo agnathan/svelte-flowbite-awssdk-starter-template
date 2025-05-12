@@ -134,8 +134,7 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 	myHeaders.append('Accept', 'application/json');
-	// // myHeaders.append("Cookie", "XSRF-TOKEN=0b7f84da-76e7-4a7b-b3a1-830d91798b2c");
-	console.log("here 1")
+	
 	const urlencoded = new URLSearchParams();
 	urlencoded.append('grant_type', 'authorization_code');
 	urlencoded.append('client_id', COGNITO_CLIENT_ID);
