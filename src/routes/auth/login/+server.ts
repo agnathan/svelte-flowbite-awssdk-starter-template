@@ -1,62 +1,55 @@
-/**
- * @file src/routes/auth/login/+server.ts
- * @description
- * SvelteKit GET handler that initiates an AWS Cognito OAuth2 authorization flow using PKCE.
- * 
- * This endpoint performs the following steps:
- *   1. Generates a PKCE code verifier and its corresponding code challenge.
- *   2. Stores the verifier in a secure, HttpOnly cookie (valid for 5 minutes) at `/auth/callback`.
- *   3. Constructs the AWS Cognito Hosted UI login URL with:
- *      - client_id
- *      - response_type=code
- *      - requested scopes (email, openid, phone)
- *      - redirect_uri
- *      - code_challenge (S256)
- *      - code_challenge_method=S256
- *   4. Issues a 302 redirect to the Cognito Hosted UI to prompt user authentication.
- * 
- * @requires $lib/auth/pkce            PKCE helper functions: generateCodeVerifier, generateCodeChallenge
- * @requires @sveltejs/kit             SvelteKit redirect utility and RequestHandler type
- * @requires $env/static/private       COGNITO_CLIENT_ID, COGNITO_REDIRECT_URI, COGNITO_DOMAIN
- * 
- * @example
- * // In your SvelteKit routes:
- * // GET /auth/login  →  this handler runs, sets PKCE cookie, and redirects to Cognito
- * 
- * @export {RequestHandler} GET        SvelteKit GET handler exported for the `/auth/login` route
- */
-
-
+// src/routes/auth/login/+server.ts
+import { redirect, type RequestHandler } from '@sveltejs/kit';
 // Import PKCE utilities for generating the code verifier and code challenge
 import { generateCodeChallenge, generateCodeVerifier } from '$lib/auth/pkce';
-// Import redirect helper and RequestHandler type from SvelteKit
-import { redirect, type RequestHandler } from '@sveltejs/kit';
-// Load Cognito configuration from environment variables
 import {
-	COGNITO_CLIENT_ID,    // Your AWS Cognito App Client ID
+	COGNITO_CLIENT_ID, // Your AWS Cognito App Client ID
 	COGNITO_REDIRECT_URI, // The URI Cognito will redirect to after login
-	COGNITO_DOMAIN        // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
+	COGNITO_DOMAIN // Your AWS Cognito domain (e.g., yourapp.auth.us-west-2.amazoncognito.com)
 } from '$env/static/private';
+import { v4 as uuidv4 } from 'uuid';
 
-// Handle GET requests to initiate the OAuth2 authorization code flow with PKCE
-export const GET: RequestHandler = async ({ cookies }) => {
-	console.log("Entering Server side GET function: /auth/login");
+export const GET: RequestHandler = async ({ cookies, url }) => {
 	// 1. Generate a random PKCE code verifier
 	const verifier = generateCodeVerifier();
 	// 2. Derive the code challenge from the verifier (SHA256 + base64-url)
 	const challenge = generateCodeChallenge(verifier);
-	console.log("cookies: ", cookies.getAll());
-	console.log("verifier:", verifier);
-	console.log("challenge:", challenge);
-	// 3. Store the verifier in a secure, HttpOnly cookie for later verification
+	const state = uuidv4();
+
+	console.log(
+		"process.env.NODE_ENV === 'production': ",
+		process.env.NODE_ENV === 'production',
+		process.env.NODE_ENV
+	);
+
+	// Store both verifier and state
 	cookies.set('pkce_verifier', verifier, {
-		httpOnly: true,  // prevent JavaScript access
-		secure: true,    // send only over HTTPS
-		sameSite: 'lax', // protect against CSRF
-		path: '/auth/callback', // restrict cookie to callback route
-		maxAge: 300     // expire after 5 minutes
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'lax',
+		path: '/auth', // <-- broader path
+		maxAge: 300 // 5 minutes
 	});
-	
+	cookies.set('auth_state', state, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'lax',
+		path: '/auth',
+		maxAge: 300
+	});
+
+    console.log("/auth/login cookies: ", cookies.getAll());
+
+	// const redirectUri = url.origin + '/auth/callback';
+	// const loginUrl = new URL(`${COGNITO_DOMAIN}/oauth2/authorize`);
+	// loginUrl.searchParams.set('response_type', 'code');
+	// loginUrl.searchParams.set('client_id', COGNITO_CLIENT_ID);
+	// loginUrl.searchParams.set('redirect_uri', redirectUri);
+	// loginUrl.searchParams.set('state', state);
+	// loginUrl.searchParams.set('code_challenge_method', 'S256');
+	// loginUrl.searchParams.set('code_challenge', challenge);
+
+
 	// 4. Build the Cognito Hosted UI login URL with required query parameters
 	const loginUrl = new URL(`${COGNITO_DOMAIN}/login`);
 	// Identify the client application
@@ -73,6 +66,6 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	loginUrl.searchParams.set('code_challenge_method', 'S256');
 
 	console.log('loginUrl:', loginUrl);
-	// 5. Redirect the user to the Cognito login page
+
 	throw redirect(302, loginUrl.toString());
 };
