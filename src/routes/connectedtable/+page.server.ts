@@ -24,19 +24,25 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 	let ddb;
 	let data;
 	try {
+		console.log('Getting AWS Identity ID');
 		identityId = await getAWSIdentityId({ idToken });
+		console.log('AWS Identity ID: ', identityId);
 	} catch {
 		throw error(401, 'Authentication required. getAWSIdentityId failed.');
 	}
 
 	try {
+		console.log('Getting DynamoDB Client');
 		ddb = await getDynamoDBClient(idToken);
+		console.log('DynamoDB Client: ', ddb);
 	} catch {
 		throw error(401, 'Authentication required. getDynamoDBClient failed.');
 	}
 
 	try {
+		console.log('Getting Data by User');
 		data = await getDataByUser(ddb, identityId);
+		console.log('Data: ', data);
 		return { data };
 	} catch {
 		throw error(401, 'Authentication required. getDataByUser failed.');
