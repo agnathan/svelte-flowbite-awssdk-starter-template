@@ -69,7 +69,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	// Specify the code challenge method
 	loginUrl.searchParams.set('code_challenge_method', 'S256');
 
-	console.log('loginUrl:', loginUrl.toString());
+	console.log('loginUrl:', loginUrl);
 	// 5. Redirect the user to the Cognito login page
 	throw redirect(302, loginUrl.toString());
 };
