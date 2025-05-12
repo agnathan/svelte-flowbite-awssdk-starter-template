@@ -10,6 +10,9 @@ import { getDataByUser } from '$lib/db/queries/getDataByUser';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
   console.log("Entering Server side load function: /connectedtable");
+  console.log("locals: ", locals);
+
+  console.log("cookies: ", cookies.getAll());
   const idToken = cookies.get('id_token') || locals.user?.id_token;
   if (!idToken) throw error(401, 'Authentication required.');
 
