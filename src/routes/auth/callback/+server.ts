@@ -145,6 +145,8 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 		body: urlencoded
 	};
 
+	console.log("Fetching tokens from Cognito");
+	console.log("requestOptions: ", requestOptions);
 	const response = await fetch(`${COGNITO_DOMAIN}/oauth2/token`, requestOptions);
 
 	if (!response.ok) {
