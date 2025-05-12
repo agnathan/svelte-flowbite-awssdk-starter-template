@@ -49,13 +49,15 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	console.log("verifier:", verifier);
 	console.log("challenge:", challenge);
 	// 3. Store the verifier in a secure, HttpOnly cookie for later verification
-	cookies.set('pkce_verifier', verifier, {
-		httpOnly: true,  // prevent JavaScript access
-		secure: true,    // send only over HTTPS
-		sameSite: 'lax', // protect against CSRF
-		path: '/auth/callback', // restrict cookie to callback route
-		maxAge: 300     // expire after 5 minutes
-	});
+	cookies.set('pkce_verifier', verifier,{ path: '/' })
+		//  {
+		// httpOnly: true,  // prevent JavaScript access
+		// secure: true,    // send only over HTTPS
+		// sameSite: 'lax', // protect against CSRF
+		// path: '/auth/callback', // restrict cookie to callback route
+		// maxAge: 300     // expire after 5 minutes
+	// }
+// );
 	console.log("cookies: ", cookies.getAll());
 	// 4. Build the Cognito Hosted UI login URL with required query parameters
 	const loginUrl = new URL(`${COGNITO_DOMAIN}/login`);
