@@ -119,7 +119,7 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	// Get the authorization code from the URL query parameters
 	const code = url.searchParams.get('code');
 	const verifier = cookies.get('pkce_verifier')
-	console.log("cookies: ", cookies);
+	console.log("cookies: ", cookies.getAll());
 	console.log("code: ", code);
 	console.log("verifier: ", verifier);
 

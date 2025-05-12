@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	const verifier = generateCodeVerifier();
 	// 2. Derive the code challenge from the verifier (SHA256 + base64-url)
 	const challenge = generateCodeChallenge(verifier);
-
+	console.log("cookies: ", cookies.getAll());
 	console.log("verifier:", verifier);
 	console.log("challenge:", challenge);
 	// 3. Store the verifier in a secure, HttpOnly cookie for later verification
@@ -56,7 +56,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 		path: '/auth/callback', // restrict cookie to callback route
 		maxAge: 300     // expire after 5 minutes
 	});
-
+	console.log("cookies: ", cookies.getAll());
 	// 4. Build the Cognito Hosted UI login URL with required query parameters
 	const loginUrl = new URL(`${COGNITO_DOMAIN}/login`);
 	// Identify the client application
