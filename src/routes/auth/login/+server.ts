@@ -24,18 +24,29 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 
 	// Store both verifier and state
 	cookies.set('pkce_verifier', verifier, {
+
 		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
-		sameSite: 'lax',
-		path: '/auth', // <-- broader path
-		maxAge: 300 // 5 minutes
+		secure: false,        // turn off for now
+		sameSite: 'none',     // allow cross-site if you’re doing anything funky
+		path: '/',            // send on every route
+		maxAge: 300
+		// httpOnly: true,
+		// secure: process.env.NODE_ENV === 'production',
+		// sameSite: 'lax',
+		// path: '/auth', // <-- broader path
+		// maxAge: 300 // 5 minutes
 	});
 	cookies.set('auth_state', state, {
 		httpOnly: true,
-		secure: process.env.NODE_ENV === 'production',
-		sameSite: 'lax',
-		path: '/auth',
+		secure: false,        // turn off for now
+		sameSite: 'none',     // allow cross-site if you’re doing anything funky
+		path: '/',            // send on every route
 		maxAge: 300
+		// httpOnly: true,
+		// secure: process.env.NODE_ENV === 'production',
+		// sameSite: 'lax',
+		// path: '/auth',
+		// maxAge: 300
 	});
 
     console.log("/auth/login cookies: ", cookies.getAll());
