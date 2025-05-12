@@ -40,6 +40,7 @@ import {
 
 // Handle GET requests to initiate the OAuth2 authorization code flow with PKCE
 export const GET: RequestHandler = async ({ cookies }) => {
+	console.log("Entering Server side GET function: /auth/login");
 	// 1. Generate a random PKCE code verifier
 	const verifier = generateCodeVerifier();
 	// 2. Derive the code challenge from the verifier (SHA256 + base64-url)

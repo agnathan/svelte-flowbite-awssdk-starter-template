@@ -115,6 +115,7 @@ function decodeJwtPayload(token: string): Record<string, any> {
   
 
 export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
+	console.log("Entering Server side GET function: /auth/callback");
 	// Get the authorization code from the URL query parameters
 	const code = url.searchParams.get('code');
 	const verifier = cookies.get('pkce_verifier')

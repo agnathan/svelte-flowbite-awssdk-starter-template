@@ -40,6 +40,7 @@ const payloadSchema = z.object({
  * POST handler: Validates input, generates a presigned S3 upload URL, and returns it.
  */
 export const POST: RequestHandler = async ({ request }) => {
+  console.log("Entering Server side POST function: /api/upload-url");
   let filename: string;
   let contentType: string;
 

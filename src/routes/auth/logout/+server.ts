@@ -28,6 +28,7 @@ import {
 
 // Handle GET requests to the /logout endpoint
 export const GET: RequestHandler = async ({ cookies }) => {
+	console.log("Entering Server side GET function: /auth/logout");
 	// Delete authentication-related cookies from the client
 	cookies.delete('access_token', { path: '/' });
 	cookies.delete('id_token', { path: '/' });

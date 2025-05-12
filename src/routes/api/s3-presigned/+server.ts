@@ -32,6 +32,7 @@ const s3 = new S3Client({ region: REGION });
  * constructs an S3 key under the user's namespace, and returns a presigned URL.
  */
 export const POST: RequestHandler = async ({ request, locals }) => {
+  console.log("Entering Server side POST function: /api/s3-presigned");
   // Parse JSON body for required fields
   const { filename, contentType } = await request.json();
 
