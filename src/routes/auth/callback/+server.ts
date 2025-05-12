@@ -150,11 +150,13 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	const response = await fetch(`${COGNITO_DOMAIN}/oauth2/token`, requestOptions);
 
 	if (!response.ok) {
+		const errorText = await response.text();
+		console.error('Token exchange failed:', {
+			status: response.status,
+			statusText: response.statusText,
+			error: errorText
+		});
 		throw redirect(302, '/auth/login');
-		// const errorText = await response.text();
-		// throw new Error(
-		// 	`Token exchange failed: ${response.status} ${response.statusText} — ${errorText}`
-		// );
 	}
 
 	const tokens = await response.json();
