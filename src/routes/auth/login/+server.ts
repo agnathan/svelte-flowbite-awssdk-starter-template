@@ -46,6 +46,8 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	// 2. Derive the code challenge from the verifier (SHA256 + base64-url)
 	const challenge = generateCodeChallenge(verifier);
 
+	console.log("verifier:", verifier);
+	console.log("challenge:", challenge);
 	// 3. Store the verifier in a secure, HttpOnly cookie for later verification
 	cookies.set('pkce_verifier', verifier, {
 		httpOnly: true,  // prevent JavaScript access
