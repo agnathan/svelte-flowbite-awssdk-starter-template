@@ -119,6 +119,10 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	// Get the authorization code from the URL query parameters
 	const code = url.searchParams.get('code');
 	const verifier = cookies.get('pkce_verifier')
+	console.log("cookies: ", cookies);
+	console.log("code: ", code);
+	console.log("verifier: ", verifier);
+
 
 	if (!code || !verifier) {
 		return json({ error: 'Missing code or PKCE verifier' }, { status: 400 });
@@ -131,7 +135,7 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 	myHeaders.append('Accept', 'application/json');
 	// // myHeaders.append("Cookie", "XSRF-TOKEN=0b7f84da-76e7-4a7b-b3a1-830d91798b2c");
-	
+	console.log("here 1")
 	const urlencoded = new URLSearchParams();
 	urlencoded.append('grant_type', 'authorization_code');
 	urlencoded.append('client_id', COGNITO_CLIENT_ID);
