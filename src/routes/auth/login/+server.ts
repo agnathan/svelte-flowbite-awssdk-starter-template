@@ -22,12 +22,13 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 		process.env.NODE_ENV
 	);
 
+	const isProd = process.env.NODE_ENV === 'production';
 	// Store both verifier and state
 	cookies.set('pkce_verifier', verifier, {
 
 		httpOnly: true,
-		secure: false,        // turn off for now
-		sameSite: 'none',     // allow cross-site if you’re doing anything funky
+		secure: isProd,      
+		sameSite: isProd ? 'none' : 'lax',   
 		path: '/',            // send on every route
 		maxAge: 300
 		// httpOnly: true,
@@ -38,8 +39,8 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 	});
 	cookies.set('auth_state', state, {
 		httpOnly: true,
-		secure: false,        // turn off for now
-		sameSite: 'none',     // allow cross-site if you’re doing anything funky
+		secure: isProd,      
+		sameSite: isProd ? 'none' : 'lax',
 		path: '/',            // send on every route
 		maxAge: 300
 		// httpOnly: true,
