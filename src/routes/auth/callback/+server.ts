@@ -166,6 +166,8 @@ export const GET: RequestHandler = async ({ fetch, cookies, url }) => {
 	const tokens = await response.json();
 
 	const { id_token, access_token, refresh_token, expires_in } = tokens
+	console.log("I'm setting the tokens in the cookies")
+	console.log("tokens: ", tokens)
 	// console.log("id_token: ", id_token)
 	// console.log("access_token: ", access_token)
 	// console.log("id_token: ", decodeJwtPayload(id_token))
