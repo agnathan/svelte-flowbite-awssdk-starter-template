@@ -6,19 +6,23 @@ import { error, redirect, type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ cookies, url }) => {
 	console.log('Entering Server side GET function: /auth/callback');
+	console.log('cookies: ', cookies.getAll());
+	console.log('url: ', url);
 	const code = url.searchParams.get('code');
-
+	console.log('code: ', code);
 	// const storedState = cookies.get('auth_state');
 	const codeVerifier = cookies.get('pkce_verifier');
+	console.log('codeVerifier: ', codeVerifier);
 
 	if (!code || !codeVerifier) {
 		throw error(400, 'Missing/invalid OAuth2 code, state, or PKCE verifier');
 	}
-
+	console.log("here 1")
 	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
 	myHeaders.append('Accept', 'application/json');
 
+	console.log("here 2")
 	const urlencoded = new URLSearchParams();
 	urlencoded.append('grant_type', 'authorization_code');
 	urlencoded.append('client_id', COGNITO_CLIENT_ID);
@@ -26,17 +30,21 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 	urlencoded.append('redirect_uri', COGNITO_REDIRECT_URI);
 	urlencoded.append('code_verifier', codeVerifier);
 
+	console.log("here 3")
 	const requestOptions: RequestInit = {
 		method: 'POST',
 		headers: myHeaders,
 		body: urlencoded
 	};
 
+	console.log("here 4")
 	console.log('Fetching tokens from Cognito');
 	console.log('requestOptions: ', requestOptions);
 	const response = await fetch(`${COGNITO_DOMAIN}/oauth2/token`, requestOptions);
 
+	console.log("here 5")
 	if (!response.ok) {
+		console.log("here 6")
 		const errorText = await response.text();
 		console.error('Token exchange failed:', {
 			status: response.status,
@@ -46,12 +54,14 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 		throw redirect(302, '/auth/login');
 	}
 
+	console.log("here 7")
 	const tokens = await response.json();
 	console.log('tokens: ', tokens);
 	// Clean up
 	cookies.delete('auth_state', { path: '/auth' });
 	cookies.delete('pkce_verifier', { path: '/auth' });
 
+	console.log("here 8")
 	// Set your session cookie (or however you manage user sessions)
 	cookies.set('id_token', tokens.id_token, {
 		httpOnly: true,
@@ -61,6 +71,7 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 		maxAge: tokens.expires_in
 	});
 
+	console.log("here 9")
 	cookies.set('access_token', tokens.access_token, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
@@ -69,6 +80,7 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 		maxAge: tokens.expires_in
 	});
 
+	console.log("here 10")
 	cookies.set('refresh_token', tokens.refresh_token, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
@@ -77,5 +89,6 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 		maxAge: tokens.expires_in
 	});
 
+	console.log("here 11")
 	throw redirect(302, '/');
 };
