@@ -44,28 +44,28 @@ export const POST: RequestHandler = async ({ request }) => {
   let { filename, contentType } = await request.json();
 
   console.log("Request body:", filename, contentType);
-  console.log("Here 1")
+  
   // Parse and validate the JSON body against our schema
   // try {
-  // console.log("Here 2");
+  // 
 
-  //   console.log("Here 3");
+  //   
   // } catch (err) {
   //   // Return HTTP 400 if validation fails
-  //   console.log("Here 4");
+  //   
   //   throw error(400, `Bad request: ${(err as Error).message}`);
   // }
 
   // Derive a deterministic object key using SHA-256 of the filename
-  console.log("Here 5");
+  
   const hash = createHash('sha256').update(filename).digest('hex');
   // Extract file extension from MIME type (e.g., 'image/png' -> 'png')
-  console.log("Here 6");
+  
   const ext = contentType.split('/').pop() ?? '';
   const key = `${hash}.${ext}`;
 
   // Prepare the S3 PutObjectCommand with bucket, key, and content type
-  console.log("Here 7");
+  
   const cmd = new PutObjectCommand({
     Bucket: S3_FILEUPLOADS_BUCKET,
     Key: key,
@@ -74,18 +74,18 @@ export const POST: RequestHandler = async ({ request }) => {
 
   try {
     // Generate a presigned URL valid for 1 hour (3600 seconds)
-    console.log("Here 8");
+    
     const url = await getSignedUrl(s3, cmd, { expiresIn: 3600 });
     // Return the signed URL and object key to the client
-    console.log("Here 9");
+    
     return json({ url, key });
   } catch (err) {
     // Log the error for debugging purposes
-    console.log("Here 10");
+    
     console.error('Presign error:', err);
     // Return HTTP 500 on failure to generate URL
-    console.log("Here 11");
+    
     throw error(500, 'Could not generate upload URL');
   }
-  console.log("Here 12");
+  
 };

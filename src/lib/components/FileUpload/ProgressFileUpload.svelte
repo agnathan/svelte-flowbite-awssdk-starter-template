@@ -36,7 +36,7 @@
 			await new Promise<void>((resolve, reject) => {
 				const xhr = new XMLHttpRequest();
 				xhr.open('PUT', url);
-				xhr.setRequestHeader('Content-Type', file.type);
+				xhr.setRequestHeader('Content-Type', file?.type ?? '');
 
 				xhr.upload.onprogress = (e) => {
 					if (e.lengthComputable) {
