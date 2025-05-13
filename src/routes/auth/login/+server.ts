@@ -16,20 +16,13 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 	const challenge = generateCodeChallenge(verifier);
 	const state = uuidv4();
 
-	console.log(
-		"process.env.NODE_ENV === 'production': ",
-		process.env.NODE_ENV === 'production',
-		process.env.NODE_ENV
-	);
-
 	const isProd = process.env.NODE_ENV === 'production';
 	// Store both verifier and state
 	cookies.set('pkce_verifier', verifier, {
-
 		httpOnly: true,
 		secure: isProd,      
 		sameSite: isProd ? 'none' : 'lax',   
-		path: '/',            // send on every route
+		path: '/auth/callback',            // send on every route
 		maxAge: 300
 		// httpOnly: true,
 		// secure: process.env.NODE_ENV === 'production',

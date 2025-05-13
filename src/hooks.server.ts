@@ -7,9 +7,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (
 		// event.url.pathname.startsWith('/') ||
 		event.url.pathname.startsWith('/auth/login') ||
-		event.url.pathname.startsWith('/auth/callback') ||
-		event.url.pathname.startsWith('/api/cookies/get') ||
-		event.url.pathname.startsWith('/api/cookies/set')
+		event.url.pathname.startsWith('/auth/callback') 
 	) {
 		return resolve(event);
 	}
