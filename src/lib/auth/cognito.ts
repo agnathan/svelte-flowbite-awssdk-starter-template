@@ -13,7 +13,7 @@ export const getAWSIdentityId = async ({ idToken }: { idToken: string }) => {
 	// 1. Exchange ID token for an Identity ID
 	console.log('Getting Cognito Identity Client');
 	const cIdentity = new CognitoIdentityClient({ region: REGION });
-	console.log('Getting Cognito Identity ID');
+	// console.log('Getting Cognito Identity ID');
 
 	console.log('COGNITO_IDENTITY_POOL_ID: ', COGNITO_IDENTITY_POOL_ID);
 	console.log('COGNITO_USER_POOL_ID: ', COGNITO_USER_POOL_ID);
