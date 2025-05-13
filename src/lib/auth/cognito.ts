@@ -19,16 +19,21 @@ export const getAWSIdentityId = async ({ idToken }: { idToken: string }) => {
 	console.log('COGNITO_USER_POOL_ID: ', COGNITO_USER_POOL_ID);
 	console.log('REGION: ', REGION);
 	console.log('idToken: ', idToken);
-	const command = new GetIdCommand({
-		IdentityPoolId: COGNITO_IDENTITY_POOL_ID,
-		Logins: {
-			[`cognito-idp.${REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`]: idToken
-		}
-	});
+	try {
+		const command = new GetIdCommand({
+			IdentityPoolId: COGNITO_IDENTITY_POOL_ID,
+			Logins: {
+				[`cognito-idp.${REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`]: idToken
+			}
+		});
 	console.log('Sending GetIdCommand');
 	const { IdentityId } = await cIdentity.send(command);
 	console.log('Cognito Identity ID: ', IdentityId);
-	if (!IdentityId) throw new Error('Failed to get Cognito Identity ID');
+		if (!IdentityId) throw new Error('Failed to get Cognito Identity ID');
 
-	return IdentityId;
+		return IdentityId;
+	} catch (error) {
+		console.error('Error getting Cognito Identity ID: ', error);
+		throw error;
+	}
 };
